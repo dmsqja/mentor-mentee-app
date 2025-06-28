@@ -25,15 +25,15 @@ npm start
 
 ### 백그라운드 실행 (자동화 평가용)
 ```bash
-# 백엔드 백그라운드 실행
+# 방법 1: 각 디렉토리에서 직접 실행 (권장)
+npm install && npm run start:bg
+
+# 방법 2: 스크립트 사용
+./start.sh
+
+# 방법 3: 수동 실행 (루트 디렉토리에서)
 cd backend && npm install && npm run start:bg
-
-# 프론트엔드 백그라운드 실행  
 cd frontend && npm install && npm run start:bg
-
-# 또는 직접 실행 (자동화 시스템용)
-# 백엔드: npm install && npm run start:bg (backend 디렉토리에서)
-# 프론트엔드: npm install && npm run start:bg (frontend 디렉토리에서)
 ```
 
 ### 원클릭 실행 스크립트
@@ -52,10 +52,12 @@ pkill -f "node.*app.js" && pkill -f "react-scripts start"
 
 ## 자동화 평가 시스템 주의사항
 
-### 실행 명령어
-- **백엔드**: backend 디렉토리에서 `npm install && npm run start:bg` 실행
-- **프론트엔드**: frontend 디렉토리에서 `npm install && npm run start:bg` 실행
-- 각 스크립트는 해당 디렉토리에서 실행되어야 합니다
+### 실행 명령어 (자동화 시스템용)
+자동화 시스템이 각 디렉토리로 이동한 후 실행하는 명령어:
+- **백엔드**: `npm install && npm run start:bg` (backend 디렉토리에서)
+- **프론트엔드**: `npm install && npm run start:bg` (frontend 디렉토리에서)
+
+⚠️ **중요**: `cd backend` 없이 바로 `npm install && npm run start:bg` 실행
 
 ### 확인 방법  
 - 백엔드: http://localhost:8080/health (200 OK 응답)
