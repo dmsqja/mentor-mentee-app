@@ -25,7 +25,13 @@ npm start
 
 ### 백그라운드 실행 (자동화 평가용)
 ```bash
-# 방법 3: 수동 실행 (루트 디렉토리에서)
+# 자동화 시스템용 (각 디렉토리에서 직접 실행)
+npm install && npm run start:bg
+```
+
+### 수동 백그라운드 실행 (개발용)
+```bash
+# 루트 디렉토리에서 수동 실행
 cd backend && npm install && npm run start:bg
 cd frontend && npm install && npm run start:bg
 ```
