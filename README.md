@@ -1,15 +1,45 @@
 # 멘토-멘티 매칭 웹앱
 
-멘토와 멘티를 매칭하는 웹 애플리케이션입니다.
+> **천하제일 입코딩 대회 2025 제출작**  
+> 멘토와 멘티를 매칭하는 웹 애플리케이션
 
-## 🚀 주요 기능
+## 🚀 빠른 실행 가이드
 
-- **사용자 인증**: JWT 기반 회원가입/로그인
-- **프로필 관리**: 프로필 정보 수정, 이미지 업로드
-- **멘토 검색**: 기술 스택별 필터링, 정렬
-- **매칭 요청**: 멘토에게 매칭 요청 전송/관리
-- **요청 관리**: 수락/거절, 상태 확인
-- **API 문서**: Swagger UI 제공
+### 1️⃣ 백엔드 API 서버 실행
+```bash
+cd backend
+npm install
+npm start
+```
+- **서버 주소**: http://localhost:8080
+- **API 문서**: http://localhost:8080/swagger-ui  
+- **OpenAPI**: http://localhost:8080/openapi.json
+
+### 2️⃣ 프론트엔드 앱 실행
+```bash
+cd frontend  
+npm install
+npm start
+```
+- **앱 주소**: http://localhost:3000
+
+## ✅ 구현 완료 기능
+
+### 필수 기능
+- ✅ **회원가입/로그인** (JWT 인증)
+- ✅ **프로필 관리** (이미지 업로드 포함)
+- ✅ **멘토 검색** (기술스택 필터링, 정렬)
+- ✅ **매칭 요청** (메시지 포함)
+- ✅ **요청 관리** (수락/거절/취소)
+- ✅ **제한사항** (중복 요청 방지, 1:1 매칭)
+
+### 기술 요구사항
+- ✅ **JWT 클레임** (RFC 7519 준수: iss, sub, aud, exp, nbf, iat, jti + name, email, role)
+- ✅ **OpenAPI 문서** 및 **Swagger UI**
+- ✅ **SQLite 데이터베이스** (자동 초기화)
+- ✅ **보안 기능** (SQL 인젝션 방지, XSS 방지, Rate Limiting)
+- ✅ **프로필 이미지** (JPG/PNG, 500x500-1000x1000, 최대 1MB)
+- ✅ **기본 플레이스홀더** 이미지
 
 ## 🛠 기술 스택
 
@@ -51,50 +81,45 @@ mentor-mentee-app/
 └── docs/              # 문서
 ```
 
-## 기능
+## 🛠 기술 스택
 
-- 회원가입 및 로그인 (JWT 인증)
-- 사용자 프로필 관리 (멘토/멘티)
-- 멘토 목록 조회 및 검색
-- 매칭 요청 기능
-- 요청 수락/거절
-- 요청 상태 조회
+### Frontend
+- **React 18** + **TypeScript**
+- React Router, CSS3
+- JWT Authentication
 
-## 기술 스택
+### Backend  
+- **Node.js** + **Express.js**
+- **SQLite** Database (자동 초기화)
+- **JWT** Authentication (RFC 7519 준수)
+- **Swagger UI** / OpenAPI 3.0
+- Rate Limiting & Security Middleware
 
-- **Frontend**: React.js
-- **Backend**: Node.js + Express.js
-- **Database**: SQLite (로컬 개발용)
-- **Authentication**: JWT
-- **API Documentation**: Swagger/OpenAPI
+## 📋 평가 체크리스트
 
-## 실행 방법
+### 🌐 URL 접근성
+- ✅ 프론트엔드: http://localhost:3000
+- ✅ 백엔드 API: http://localhost:8080/api
+- ✅ Swagger UI: http://localhost:8080/swagger-ui
+- ✅ 루트 URL → Swagger UI 리다이렉트
 
-### 1. 백엔드 실행
+### 🔧 실행 명령어
 ```bash
-cd backend
-npm install
-npm start
+# 백엔드 (터미널 1)
+cd backend && npm install && npm start
+
+# 프론트엔드 (터미널 2)  
+cd frontend && npm install && npm start
 ```
-- 백엔드 서버: http://localhost:8080
-- Swagger UI: http://localhost:8080/swagger-ui
 
-### 2. 프론트엔드 실행
-```bash
-cd frontend
-npm install
-npm start
-```
-- 프론트엔드 앱: http://localhost:3000
+### 🎯 핵심 비즈니스 로직
+- ✅ **매칭 제한**: 멘티는 대기중인 요청이 있으면 다른 요청 불가
+- ✅ **중복 방지**: 같은 멘토에게 재요청 불가 (DB UNIQUE 제약)
+- ✅ **1:1 매칭**: 멘토는 한 명의 멘티만 수락 가능
+- ✅ **상태 관리**: pending → accepted/rejected → cancelled
 
-## API 명세
-
-- OpenAPI 문서: `http://localhost:8080/openapi.json`
-- Swagger UI: `http://localhost:8080/swagger-ui`
-
-## 보안
-
-- JWT 토큰 기반 인증
-- SQL 인젝션 방지
-- XSS 공격 방지
-- OWASP TOP 10 보안 기준 준수
+### 🔐 보안 & 인증
+- ✅ **JWT 토큰**: 모든 필수 클레임 (iss, sub, aud, exp, nbf, iat, jti)
+- ✅ **커스텀 클레임**: name, email, role (mentor/mentee)  
+- ✅ **토큰 만료**: 1시간 유효기간
+- ✅ **보안 미들웨어**: SQL 인젝션, XSS 방지, Rate Limiting
