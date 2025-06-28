@@ -25,12 +25,6 @@ npm start
 
 ### 백그라운드 실행 (자동화 평가용)
 ```bash
-# 방법 1: 각 디렉토리에서 직접 실행 (권장)
-npm install && npm run start:bg
-
-# 방법 2: 스크립트 사용
-./start.sh
-
 # 방법 3: 수동 실행 (루트 디렉토리에서)
 cd backend && npm install && npm run start:bg
 cd frontend && npm install && npm run start:bg
