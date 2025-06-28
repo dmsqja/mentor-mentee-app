@@ -9,79 +9,32 @@
 - Node.js 16+
 - npm 8+
 
-### 백엔드 실행
+### 자동화 평가 시스템용 실행
 ```bash
-cd backend
-npm install
-npm start
-```
-
-### 프론트엔드 실행
-```bash
-cd frontend
-npm install
-npm start
-```
-
-### 개별 백그라운드 실행
-```bash
-# 백엔드만 백그라운드 실행
-cd backend && npm install && npm run start:bg
-
-# 프론트엔드만 백그라운드 실행  
-cd frontend && npm install && npm run start:bg
-```
-
-### 백그라운드 실행 (자동화 평가용)
-```bash
-# 자동화 시스템용 (각 디렉토리에서 직접 실행)
+# 각 디렉토리에서 직접 실행 (pushd 후 실행)
 npm install && npm run start:bg
 ```
 
-### 전체 백그라운드 실행 (개발용)
-```bash
-# 백엔드만 실행 (루트 디렉토리에서)
-cd backend && npm install && npm run start:bg
-
-# 프론트엔드만 실행 (루트 디렉토리에서)
-cd frontend && npm install && npm run start:bg
-
-# 둘 다 실행 (루트 디렉토리에서)
-cd backend && npm install && npm run start:bg && cd ../frontend && npm install && npm run start:bg
-```
-
 ### 수동 실행 (개발용)
-
-#### 백엔드만 실행
 ```bash
+# 백엔드 실행
 cd backend
 npm install
 npm start
-```
 
-#### 프론트엔드만 실행  
-```bash
+# 프론트엔드 실행  
 cd frontend
 npm install
 npm start
 ```
 
-#### 백그라운드 수동 실행
+### 백그라운드 실행 (개발용)
 ```bash
 # 백엔드 백그라운드 실행
 cd backend && npm install && npm run start:bg
 
 # 프론트엔드 백그라운드 실행 
 cd frontend && npm install && npm run start:bg
-```
-
-### 원클릭 실행 스크립트
-```bash
-# 시작
-./start.sh
-
-# 종료
-./stop.sh
 ```
 
 ### 수동 백그라운드 종료
@@ -92,11 +45,14 @@ pkill -f "node.*app.js" && pkill -f "react-scripts start"
 ## 자동화 평가 시스템 주의사항
 
 ### 실행 명령어 (자동화 시스템용)
-자동화 시스템이 각 디렉토리로 이동한 후 실행하는 명령어:
-- **백엔드**: `npm install && npm run start:bg` (backend 디렉토리에서)
-- **프론트엔드**: `npm install && npm run start:bg` (frontend 디렉토리에서)
+자동화 시스템이 `pushd`로 각 디렉토리에 진입한 후 실행하는 명령어:
+- **백엔드**: `npm install && npm run start:bg` (이미 backend 디렉토리 안에서)
+- **프론트엔드**: `npm install && npm run start:bg` (이미 frontend 디렉토리 안에서)
 
-⚠️ **중요**: `cd backend` 없이 바로 `npm install && npm run start:bg` 실행
+⚠️ **중요**: 
+- 자동화 시스템은 이미 `pushd backend` 또는 `pushd frontend`로 해당 디렉토리에 들어간 상태
+- 따라서 추가로 `cd backend` 명령어를 사용하면 안됨
+- 바로 `npm install && npm run start:bg` 실행
 
 ### 확인 방법  
 - 백엔드: http://localhost:8080/health (200 OK 응답)
