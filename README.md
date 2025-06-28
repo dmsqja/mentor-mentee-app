@@ -23,16 +23,55 @@ npm install
 npm start
 ```
 
+### 개별 백그라운드 실행
+```bash
+# 백엔드만 백그라운드 실행
+cd backend && npm install && npm run start:bg
+
+# 프론트엔드만 백그라운드 실행  
+cd frontend && npm install && npm run start:bg
+```
+
 ### 백그라운드 실행 (자동화 평가용)
 ```bash
 # 자동화 시스템용 (각 디렉토리에서 직접 실행)
 npm install && npm run start:bg
 ```
 
-### 수동 백그라운드 실행 (개발용)
+### 전체 백그라운드 실행 (개발용)
 ```bash
-# 루트 디렉토리에서 수동 실행
+# 백엔드만 실행 (루트 디렉토리에서)
 cd backend && npm install && npm run start:bg
+
+# 프론트엔드만 실행 (루트 디렉토리에서)
+cd frontend && npm install && npm run start:bg
+
+# 둘 다 실행 (루트 디렉토리에서)
+cd backend && npm install && npm run start:bg && cd ../frontend && npm install && npm run start:bg
+```
+
+### 수동 실행 (개발용)
+
+#### 백엔드만 실행
+```bash
+cd backend
+npm install
+npm start
+```
+
+#### 프론트엔드만 실행  
+```bash
+cd frontend
+npm install
+npm start
+```
+
+#### 백그라운드 수동 실행
+```bash
+# 백엔드 백그라운드 실행
+cd backend && npm install && npm run start:bg
+
+# 프론트엔드 백그라운드 실행 
 cd frontend && npm install && npm run start:bg
 ```
 
