@@ -13,7 +13,14 @@
 ```bash
 # 각 디렉토리에서 직접 실행 (pushd 후 실행)
 npm install && npm run start:bg
+
+# 또는 start.sh 스크립트 사용 (권장)
+./start.sh
 ```
+
+⚠️ **중요**: 제출 이슈의 실행 명령어에 `cd backend` 포함하지 말 것!
+- ❌ 잘못된 예: `cd backend && npm install && npm run start:bg`
+- ✅ 올바른 예: `npm install && npm run start:bg` 또는 `./start.sh`
 
 ### 수동 실행 (개발용)
 ```bash
