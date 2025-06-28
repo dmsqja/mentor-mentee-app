@@ -28,12 +28,12 @@ npm start
 # 백엔드 백그라운드 실행
 cd backend && npm install && npm run start:bg
 
-# 프론트엔드 백그라운드 실행
+# 프론트엔드 백그라운드 실행  
 cd frontend && npm install && npm run start:bg
 
-# 또는 로그 출력과 함께
-cd backend && npm install && npm start > backend.log 2>&1 &
-cd frontend && npm install && npm start > frontend.log 2>&1 &
+# 또는 직접 실행 (자동화 시스템용)
+# 백엔드: npm install && npm run start:bg (backend 디렉토리에서)
+# 프론트엔드: npm install && npm run start:bg (frontend 디렉토리에서)
 ```
 
 ### 원클릭 실행 스크립트
@@ -49,6 +49,19 @@ cd frontend && npm install && npm start > frontend.log 2>&1 &
 ```bash
 pkill -f "node.*app.js" && pkill -f "react-scripts start"
 ```
+
+## 자동화 평가 시스템 주의사항
+
+### 실행 명령어
+- **백엔드**: backend 디렉토리에서 `npm install && npm run start:bg` 실행
+- **프론트엔드**: frontend 디렉토리에서 `npm install && npm run start:bg` 실행
+- 각 스크립트는 해당 디렉토리에서 실행되어야 합니다
+
+### 확인 방법  
+- 백엔드: http://localhost:8080/health (200 OK 응답)
+- 프론트엔드: http://localhost:3000 (React 앱 로딩)
+- 로그 파일: `server.log` (백엔드), `app.log` (프론트엔드)
+- PID 파일: `server.pid` (백엔드), `app.pid` (프론트엔드)
 
 ## 테스트 계정
 

@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:bg": "nohup react-scripts start > app.log 2>&1 &",
+    "start:bg": "nohup react-scripts start > app.log 2>&1 & echo $! > app.pid",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
