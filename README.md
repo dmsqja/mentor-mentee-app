@@ -5,23 +5,50 @@
 
 ## 🚀 빠른 실행 가이드
 
-### 1️⃣ 백엔드 API 서버 실행
+> **⚡ 평가자용 원클릭 실행**  
+> 두 터미널에서 동시 실행 필요 (백엔드 + 프론트엔드)
+
+### 📋 실행 순서
+
+#### 터미널 1: 백엔드 서버 실행
 ```bash
 cd backend
 npm install
 npm start
 ```
-- **서버 주소**: http://localhost:8080
-- **API 문서**: http://localhost:8080/swagger-ui  
-- **OpenAPI**: http://localhost:8080/openapi.json
+- ✅ **서버 실행**: http://localhost:8080
+- ✅ **API 문서**: http://localhost:8080/swagger-ui  
+- ✅ **OpenAPI**: http://localhost:8080/openapi.json
 
-### 2️⃣ 프론트엔드 앱 실행
+#### 터미널 2: 프론트엔드 앱 실행  
 ```bash
 cd frontend  
 npm install
 npm start
 ```
-- **앱 주소**: http://localhost:3000
+- ✅ **앱 접속**: http://localhost:3000
+
+### 🔥 원클릭 실행 (추천)
+```bash
+# 자동 실행 스크립트 (백엔드 + 프론트엔드 동시 실행)
+./start.sh
+```
+
+### 🔧 수동 실행 (평가자용)
+```bash
+# 백엔드 (터미널 1)
+cd backend && npm install && npm start
+
+# 프론트엔드 (터미널 2) 
+cd frontend && npm install && npm start
+```
+
+### ⚠️ 실행 시 주의사항
+- **Node.js 16+** 및 **npm 8+** 필요
+- **두 터미널 모두 실행 유지** (백그라운드 실행)
+- 백엔드 실행 후 프론트엔드 실행 권장
+- 초기 설치는 약 1-2분 소요
+- `start.sh` 스크립트로 **한 번에 실행 가능**
 
 ## ✅ 구현 완료 기능
 
