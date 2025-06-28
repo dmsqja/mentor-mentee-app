@@ -50,6 +50,60 @@ cd frontend && npm install && npm start > frontend.log 2>&1 &
 pkill -f "node.*app.js" && pkill -f "react-scripts start"
 ```
 
+## 테스트 계정
+
+앱 실행 시 다음 테스트 계정들이 자동으로 생성됩니다:
+
+### 멘토 계정
+- **이메일**: `mentor@test.com`
+- **비밀번호**: `test123`
+- **이름**: 김멘토
+- **기술스택**: React, Node.js, Python, MongoDB, PostgreSQL
+
+- **이메일**: `mentor2@test.com`
+- **비밀번호**: `test123`
+- **이름**: 박멘토
+- **기술스택**: Python, TensorFlow, PyTorch, Jupyter, Docker
+
+### 멘티 계정
+- **이메일**: `mentee@test.com`
+- **비밀번호**: `test123`
+- **이름**: 이멘티
+- **기술스택**: HTML, CSS, JavaScript
+
+- **이메일**: `mentee2@test.com`
+- **비밀번호**: `test123`
+- **이름**: 최멘티
+- **기술스택**: Python, Basic ML
+
+### 로그인 예시
+1. http://localhost:3000 접속
+2. 상단 네비게이션에서 "로그인" 클릭
+3. 위 테스트 계정 중 하나로 로그인
+4. 대시보드에서 매칭 요청 및 관리 기능 사용
+
+### API 테스트 예시
+```bash
+# 1. 멘티 로그인
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "mentee@test.com", "password": "test123"}'
+
+# 2. 멘토 목록 조회 (응답으로 받은 토큰 사용)
+curl -X GET http://localhost:8080/api/users/mentors \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# 3. 매칭 요청 보내기
+curl -X POST http://localhost:8080/api/matches/requests \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{"mentor_id": 1, "message": "멘토링을 받고 싶습니다!"}'
+
+# 4. 멘토 로그인 후 요청 승인
+curl -X PUT http://localhost:8080/api/matches/requests/1/accept \
+  -H "Authorization: Bearer MENTOR_TOKEN"
+```
+
 ### 접속 주소
 - 프론트엔드: http://localhost:3000
 - 백엔드 API: http://localhost:8080/api

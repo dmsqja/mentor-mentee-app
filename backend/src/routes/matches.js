@@ -142,9 +142,73 @@ router.post('/requests', authenticateToken, requireMentee, [
 
 /**
  * @swagger
+ * /api/matches/requests/incoming:
+ *   get:
+ *     summary: Get incoming match requests (mentor only)
+ *     tags: [Match Requests]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of incoming match requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/MatchRequest'
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Only mentors can access this endpoint
+ */
+router.get('/requests/incoming', authenticateToken, requireMentor, async (req, res, next) => {
+    try {
+        const requests = await MatchRequest.getByMentorId(req.user.id);
+        const requestsJson = requests.map(request => request.toJSON());
+        res.json(requestsJson);
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @swagger
+ * /api/matches/requests/outgoing:
+ *   get:
+ *     summary: Get outgoing match requests (mentee only)
+ *     tags: [Match Requests]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of outgoing match requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/MatchRequest'
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Only mentees can access this endpoint
+ */
+router.get('/requests/outgoing', authenticateToken, requireMentee, async (req, res, next) => {
+    try {
+        const requests = await MatchRequest.getByMenteeId(req.user.id);
+        const requestsJson = requests.map(request => request.toJSON());
+        res.json(requestsJson);
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @swagger
  * /api/matches/my-requests:
  *   get:
- *     summary: Get current user's match requests
+ *     summary: Get my match requests
  *     tags: [Match Requests]
  *     security:
  *       - bearerAuth: []
@@ -262,6 +326,134 @@ router.put('/requests/:requestId/status', authenticateToken, requireMentor, [
 
         // Update status
         const updatedRequest = await matchRequest.updateStatus(status);
+        res.json(updatedRequest.toJSON());
+
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @swagger
+ * /api/matches/requests/{id}/accept:
+ *   put:
+ *     summary: Accept match request (mentor only)
+ *     tags: [Match Requests]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Match request accepted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MatchRequest'
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Only mentors can accept requests
+ *       404:
+ *         description: Request not found
+ */
+router.put('/requests/:id/accept', authenticateToken, requireMentor, async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Find the match request
+        const matchRequest = await MatchRequest.findById(id);
+        if (!matchRequest) {
+            return res.status(404).json({ error: 'Match request not found' });
+        }
+
+        // Check if this mentor owns the request
+        if (matchRequest.mentor_id !== parseInt(req.user.id)) {
+            return res.status(403).json({ error: 'You can only update your own requests' });
+        }
+
+        // Check if request is still pending
+        if (matchRequest.status !== 'pending') {
+            return res.status(400).json({ error: 'Request has already been processed' });
+        }
+
+        // Check if mentor already has accepted request
+        const mentorHasAccepted = await MatchRequest.hasAcceptedRequest(req.user.id);
+        if (mentorHasAccepted) {
+            return res.status(400).json({ 
+                error: 'You already have an accepted match request.' 
+            });
+        }
+
+        // Update status to accepted
+        const updatedRequest = await matchRequest.updateStatus('accepted');
+        if (updatedRequest) {
+            res.json(updatedRequest.toJSON());
+        } else {
+            // If updateStatus returns null, fetch the updated request manually
+            const refreshedRequest = await MatchRequest.findById(id);
+            res.json(refreshedRequest.toJSON());
+        }
+
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @swagger
+ * /api/matches/requests/{id}/reject:
+ *   put:
+ *     summary: Reject match request (mentor only)
+ *     tags: [Match Requests]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Match request rejected
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MatchRequest'
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Only mentors can reject requests
+ *       404:
+ *         description: Request not found
+ */
+router.put('/requests/:id/reject', authenticateToken, requireMentor, async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Find the match request
+        const matchRequest = await MatchRequest.findById(id);
+        if (!matchRequest) {
+            return res.status(404).json({ error: 'Match request not found' });
+        }
+
+        // Check if this mentor owns the request
+        if (matchRequest.mentor_id !== parseInt(req.user.id)) {
+            return res.status(403).json({ error: 'You can only update your own requests' });
+        }
+
+        // Check if request is still pending
+        if (matchRequest.status !== 'pending') {
+            return res.status(400).json({ error: 'Request has already been processed' });
+        }
+
+        // Update status to rejected
+        const updatedRequest = await matchRequest.updateStatus('rejected');
         res.json(updatedRequest.toJSON());
 
     } catch (error) {

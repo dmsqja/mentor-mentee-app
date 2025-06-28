@@ -178,13 +178,14 @@ class MatchRequest {
                 WHERE id = ?
             `;
             
-            db.run(sql, [status, this.id], function(err) {
+            db.run(sql, [status, this.id], (err) => {
                 if (err) {
                     reject(err);
                 } else {
-                    MatchRequest.findById(this.id)
-                        .then(resolve)
-                        .catch(reject);
+                    // Update this instance
+                    this.status = status;
+                    this.updated_at = new Date().toISOString();
+                    resolve(this);
                 }
             });
         });

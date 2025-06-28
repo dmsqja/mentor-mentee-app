@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcrypt');
 
 // Database file path
 const DB_PATH = path.join(__dirname, '../../database/mentor_mentee.db');
@@ -80,10 +81,106 @@ function createTables() {
                     reject(err);
                 } else {
                     console.log('✅ Match requests table ready');
-                    resolve();
+                    // Create test accounts after tables are created
+                    createTestAccounts()
+                        .then(() => resolve())
+                        .catch(reject);
                 }
             });
         });
+    });
+}
+
+// Create test accounts for easy testing
+async function createTestAccounts() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // Check if test accounts already exist
+            db.get("SELECT id FROM users WHERE email = 'mentor@test.com' OR email = 'mentee@test.com'", async (err, row) => {
+                if (err) {
+                    console.error('Error checking existing test accounts:', err.message);
+                    reject(err);
+                    return;
+                }
+
+                if (row) {
+                    console.log('📋 Test accounts already exist');
+                    resolve();
+                    return;
+                }
+
+                // Create test accounts
+                const testAccounts = [
+                    {
+                        email: 'mentor@test.com',
+                        password: await bcrypt.hash('test123', 10),
+                        role: 'mentor',
+                        name: '김멘토',
+                        bio: '풀스택 개발자로 5년간 근무하고 있습니다. React, Node.js, Python을 주로 사용합니다.',
+                        tech_stack: JSON.stringify(['React', 'Node.js', 'Python', 'MongoDB', 'PostgreSQL'])
+                    },
+                    {
+                        email: 'mentor2@test.com',
+                        password: await bcrypt.hash('test123', 10),
+                        role: 'mentor',
+                        name: '박멘토',
+                        bio: 'AI/ML 엔지니어입니다. Python, TensorFlow, PyTorch 전문가입니다.',
+                        tech_stack: JSON.stringify(['Python', 'TensorFlow', 'PyTorch', 'Jupyter', 'Docker'])
+                    },
+                    {
+                        email: 'mentee@test.com',
+                        password: await bcrypt.hash('test123', 10),
+                        role: 'mentee',
+                        name: '이멘티',
+                        bio: '프로그래밍을 배우고 있는 학생입니다. 웹 개발에 관심이 많습니다.',
+                        tech_stack: JSON.stringify(['HTML', 'CSS', 'JavaScript'])
+                    },
+                    {
+                        email: 'mentee2@test.com',
+                        password: await bcrypt.hash('test123', 10),
+                        role: 'mentee',
+                        name: '최멘티',
+                        bio: 'AI 분야에 관심이 있는 초보 개발자입니다.',
+                        tech_stack: JSON.stringify(['Python', 'Basic ML'])
+                    }
+                ];
+
+                const insertPromises = testAccounts.map(account => {
+                    return new Promise((resolveInsert, rejectInsert) => {
+                        const stmt = db.prepare(`
+                            INSERT INTO users (email, password, role, name, bio, tech_stack)
+                            VALUES (?, ?, ?, ?, ?, ?)
+                        `);
+                        
+                        stmt.run([
+                            account.email,
+                            account.password,
+                            account.role,
+                            account.name,
+                            account.bio,
+                            account.tech_stack
+                        ], function(err) {
+                            if (err) {
+                                console.error(`Error creating test account ${account.email}:`, err.message);
+                                rejectInsert(err);
+                            } else {
+                                console.log(`✅ Created test ${account.role}: ${account.email}`);
+                                resolveInsert();
+                            }
+                        });
+                        
+                        stmt.finalize();
+                    });
+                });
+
+                await Promise.all(insertPromises);
+                console.log('🎯 All test accounts created successfully');
+                resolve();
+            });
+        } catch (error) {
+            console.error('Error creating test accounts:', error);
+            reject(error);
+        }
     });
 }
 
