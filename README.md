@@ -23,6 +23,33 @@ npm install
 npm start
 ```
 
+### 백그라운드 실행 (자동화 평가용)
+```bash
+# 백엔드 백그라운드 실행
+cd backend && npm install && npm run start:bg
+
+# 프론트엔드 백그라운드 실행
+cd frontend && npm install && npm run start:bg
+
+# 또는 로그 출력과 함께
+cd backend && npm install && npm start > backend.log 2>&1 &
+cd frontend && npm install && npm start > frontend.log 2>&1 &
+```
+
+### 원클릭 실행 스크립트
+```bash
+# 시작
+./start.sh
+
+# 종료
+./stop.sh
+```
+
+### 수동 백그라운드 종료
+```bash
+pkill -f "node.*app.js" && pkill -f "react-scripts start"
+```
+
 ### 접속 주소
 - 프론트엔드: http://localhost:3000
 - 백엔드 API: http://localhost:8080/api
